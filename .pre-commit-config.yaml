@@ -1,0 +1,52 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: no-commit-to-branch
+        args: [ '--pattern', '^(?!((fix|feat)\/[a-zA-Z0-9\-]+)$).*' ]
+  - repo: https://github.com/matthorgan/pre-commit-conventional-commits
+    rev: 20fb9631be1385998138432592d0b6d4dfa38fc9
+    hooks:
+      - id: conventional-commit-check
+        stages:
+          - commit-msg
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: black
+        language: python
+        language_version: python3
+        minimum_pre_commit_version: 2.9.2
+        require_serial: true
+        types_or:
+          - cython
+          - python
+      - id: isort
+        name: isort
+        entry: isort
+        language: python
+        language_version: python3
+        minimum_pre_commit_version: 2.9.2
+        require_serial: true
+        types_or:
+          - cython
+          - python
+        args:
+          - '--filter-files'
+      - id: pytest
+        name: pytest
+        entry: pytest
+        language: python
+        language_version: python3
+        minimum_pre_commit_version: 2.9.2
+        require_serial: true
+        types_or:
+          - cython
+          - python
