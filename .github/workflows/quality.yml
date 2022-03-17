@@ -35,6 +35,10 @@ jobs:
         run: black --check ${{ github.event.repository.name }}
       - name: Run Black Linter on Test Files
         run: black --check tests
+      - name: Run ISort Linter on Project Files
+        run: isort --check-only --profile black ${{ github.event.repository.name }}
+      - name: Run ISort Linter on Test Files
+        run: isort --check-only --profile black tests
       - name: Run MyPy Linter on Project files
         run: mypy ${{ github.event.repository.name }}
 
