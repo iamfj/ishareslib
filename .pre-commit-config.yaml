@@ -39,7 +39,7 @@ repos:
           - cython
           - python
         args:
-          - '--profile black'
+          - --profile black
       - id: pytest
         name: pytest
         entry: pytest
