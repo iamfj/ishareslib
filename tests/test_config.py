@@ -4,8 +4,8 @@ from ishareslib.ext.user_agent.human_user_agent_factory import HumanUserAgentFac
 
 
 class DummyUserAgentFactory(UserAgentFactory):
-    def get_user_agent(self) -> str:
-        return "Dummy User Agent"
+    def __init__(self):
+        super().__init__()
 
     def new_user_agent(self) -> str:
         return "New Dummy User Agent"
