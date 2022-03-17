@@ -39,7 +39,7 @@ repos:
           - cython
           - python
         args:
-          - '--filter-files'
+          - '--profile black'
       - id: pytest
         name: pytest
         entry: pytest
