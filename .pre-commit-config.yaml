@@ -41,13 +41,3 @@ repos:
         args:
           - --profile
           - black
-      - id: pytest
-        name: pytest
-        entry: pytest
-        language: python
-        language_version: python3
-        minimum_pre_commit_version: 2.9.2
-        require_serial: true
-        types_or:
-          - cython
-          - python
