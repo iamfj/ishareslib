@@ -23,7 +23,7 @@ class ProxyAdapter(ABC):
 
     def get_proxy(self) -> Proxy:
         if self._proxy is None:
-            return self.new_proxy()
+            self._proxy = self.new_proxy()
         return self._proxy
 
     @abstractmethod

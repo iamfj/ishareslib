@@ -7,7 +7,7 @@ class UserAgentAdapter(ABC):
 
     def get_user_agent(self) -> str:
         if self._user_agent is None:
-            return self.new_user_agent()
+            self._user_agent = self.new_user_agent()
         return self._user_agent
 
     @abstractmethod
