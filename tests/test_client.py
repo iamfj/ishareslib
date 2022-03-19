@@ -17,6 +17,5 @@ def test_get_product():
 
 def test_get_product_holdings():
     client = Client()
-    holdings = client.get_product_holdings("EFAV")
-    print(holdings["Ticker"].head(n=300))
+    client.get_holdings("EFAV")
     # ToDo: Add some test logic here
