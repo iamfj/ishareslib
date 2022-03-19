@@ -8,6 +8,7 @@ from ishareslib.config import Config
 class Client:
     def __init__(self, config: Config = None):
         self._host = "https://www.ishares.com"
+        self._cached_products_df: Union[DataFrame, None] = None
 
         if config is None:
             self._config = Config()
@@ -17,16 +18,24 @@ class Client:
         # ToDo: Add usage of user agent and proxy factories
 
     def get_products(self) -> DataFrame:
-        return read_json(
+        products_df = read_json(
             "%s/us/product-screener/product-screener-v3.1.jsn?dcrPath=/templatedata/config/product-screener-v3/data"
             "/en/us-ishares/ishares-product-screener-backend-config&siteEntryPassthrough=true "
             % self._host
         ).T
+        self._cached_products_df = products_df
+        return products_df
 
     def get_product(self, ticker_symbol: str) -> dict:
-        products = self.get_products()
-        matching_products = products.loc[
-            products["localExchangeTicker"] == ticker_symbol
+        # use in-instance cached products dataframe instead of send a new request everytime
+        if self._cached_products_df is None:
+            products_df = self.get_products()
+        else:
+            products_df = self._cached_products_df
+
+        # find matching products by ticker symbol
+        matching_products = products_df.loc[
+            products_df["localExchangeTicker"] == ticker_symbol
         ]
         matching_products_count = matching_products["localExchangeTicker"].count()
         if matching_products_count > 1:
@@ -38,7 +47,12 @@ class Client:
             raise ValueError(
                 "Ticker symbol not found! [ticker_symbol=%s]" % ticker_symbol
             )
+
+        # convert matching product to dict
         return matching_products.to_dict("records")[0]
+
+    def clear(self):
+        self._cached_products_df = None
 
     def get_holdings(self, ticker_symbol: str) -> DataFrame:
         product = self.get_product(ticker_symbol)
