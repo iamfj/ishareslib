@@ -2,18 +2,21 @@ from typing import Union
 
 from pandas import DataFrame, read_csv, read_json
 
-from ishareslib.config import Config
+from ishareslib.core.proxy_adapter import ProxyAdapter
+from ishareslib.core.user_agent_adapter import UserAgentAdapter
+from ishareslib.ext.user_agent.human_user_agent_adapter import HumanUserAgentAdapter
 
 
 class Client:
-    def __init__(self, config: Config = None):
+    def __init__(
+        self,
+        user_agent_adapter: Union[UserAgentAdapter, None] = HumanUserAgentAdapter(),
+        proxy_adapter: Union[ProxyAdapter, None] = None,
+    ):
         self._host = "https://www.ishares.com"
         self._cached_products_df: Union[DataFrame, None] = None
-
-        if config is None:
-            self._config = Config()
-        else:
-            self._config = config
+        self._user_agent_adapter = user_agent_adapter
+        self._proxy_adapter = proxy_adapter
 
         # ToDo: Add usage of user agent and proxy factories
 
