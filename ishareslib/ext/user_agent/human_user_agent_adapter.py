@@ -4,9 +4,9 @@ from ishareslib.core.user_agent_adapter import UserAgentAdapter
 
 
 class HumanUserAgentAdapter(UserAgentAdapter):
-    def __init__(self):
-        super().__init__()
-        self._available_user_agents = [
+    def __init__(self, regeneration_limit: int = 3):
+        super().__init__(regeneration_limit=regeneration_limit)
+        self._user_agents = [
             "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
             "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)",
@@ -21,9 +21,5 @@ class HumanUserAgentAdapter(UserAgentAdapter):
             "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)",
         ]
 
-    def new_user_agent(self) -> str:
-        new_user_agent = choice(self._available_user_agents)
-        if new_user_agent == self._user_agent:
-            return self.new_user_agent()
-        self._user_agent = new_user_agent
-        return new_user_agent
+    def _gen_user_agent(self) -> str:
+        return choice(self._user_agents)
