@@ -2,11 +2,10 @@ from random import choice
 
 from requests import get
 
-from ishareslib.core.proxy import Proxy
-from ishareslib.core.proxy_factory import ProxyFactory
+from ishareslib.core.proxy_adapter import Proxy, ProxyAdapter
 
 
-class WebShareProxyFactory(ProxyFactory):
+class WebShareProxyAdapter(ProxyAdapter):
     def __init__(self, key: str, page: int = None):
         super().__init__()
         self._key = key

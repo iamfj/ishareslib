@@ -1,9 +1,9 @@
 from ishareslib.config import Config
-from ishareslib.core.user_agent_factory import UserAgentFactory
-from ishareslib.ext.user_agent.human_user_agent_factory import HumanUserAgentFactory
+from ishareslib.core.user_agent_adapter import UserAgentAdapter
+from ishareslib.ext.user_agent.human_user_agent_adapter import HumanUserAgentAdapter
 
 
-class DummyUserAgentFactory(UserAgentFactory):
+class DummyUserAgentAdapter(UserAgentAdapter):
     def __init__(self):
         super().__init__()
 
@@ -11,11 +11,11 @@ class DummyUserAgentFactory(UserAgentFactory):
         return "New Dummy User Agent"
 
 
-def test_get_user_agent_factory_with_default():
+def test_get_user_agent_adapter_with_default():
     config = Config()
-    assert isinstance(config.get_user_agent_factory(), HumanUserAgentFactory)
+    assert isinstance(config.get_user_agent_factory(), HumanUserAgentAdapter)
 
 
-def test_get_user_agent_factory_with_custom():
-    config = Config(user_agent_factory=DummyUserAgentFactory())
-    assert isinstance(config.get_user_agent_factory(), DummyUserAgentFactory)
+def test_get_user_agent_adapter_with_custom():
+    config = Config(user_agent_adapter=DummyUserAgentAdapter())
+    assert isinstance(config.get_user_agent_factory(), DummyUserAgentAdapter)

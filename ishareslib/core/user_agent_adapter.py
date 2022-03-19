@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class UserAgentFactory(ABC):
+class UserAgentAdapter(ABC):
     def __init__(self):
         self._user_agent = None
 

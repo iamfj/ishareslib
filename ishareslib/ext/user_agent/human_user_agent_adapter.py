@@ -1,9 +1,9 @@
 from random import choice
 
-from ishareslib.core.user_agent_factory import UserAgentFactory
+from ishareslib.core.user_agent_adapter import UserAgentAdapter
 
 
-class HumanUserAgentFactory(UserAgentFactory):
+class HumanUserAgentAdapter(UserAgentAdapter):
     def __init__(self):
         super().__init__()
         self._available_user_agents = [
