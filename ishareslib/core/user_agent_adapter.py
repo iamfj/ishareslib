@@ -20,12 +20,10 @@ class UserAgentAdapter(ABC):
                 break
 
         if user_agent is None:
-            raise ValueError("Could not choose a new user agent. [RESULT_NONE]")
+            raise ValueError("Could not choose a new user agent")
 
         if user_agent == self._user_agent:
-            raise ValueError(
-                "User agent regeneration limit exceeded. [REGENERATION_EXCEEDED]"
-            )
+            raise ValueError("User agent regeneration limit exceeded")
 
         self._user_agent = user_agent
         return self.get_user_agent()

@@ -31,7 +31,7 @@ def test_get_user_agent_with_no_data():
     with raises(ValueError) as exc_info:
         adapter.get_user_agent()
     exception_raised = exc_info.value
-    assert str(exception_raised) == "Could not choose a new user agent. [RESULT_NONE]"
+    assert str(exception_raised) == "Could not choose a new user agent"
 
 
 def test_new_user_agent():
@@ -73,7 +73,4 @@ def test_new_user_agent_with_regeneration_level_exceeded():
     with raises(ValueError) as exc_info:
         adapter.new_user_agent()
     exception_raised = exc_info.value
-    assert (
-        str(exception_raised)
-        == "User agent regeneration limit exceeded. [REGENERATION_EXCEEDED]"
-    )
+    assert str(exception_raised) == "User agent regeneration limit exceeded"
