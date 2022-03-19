@@ -38,7 +38,7 @@ class Client:
             )
         return matching_products.to_dict("records")[0]
 
-    def get_product_holdings(self, ticker_symbol: str) -> DataFrame:
+    def get_holdings(self, ticker_symbol: str) -> DataFrame:
         product = self.get_product(ticker_symbol)
         return read_csv(
             "%s%s/1467271812596.ajax?fileType=csv"
