@@ -1,6 +1,9 @@
+from io import StringIO
 from typing import Union
 
-from pandas import DataFrame, read_csv, read_json
+from pandas import DataFrame, read_csv
+from pandas._typing import ReadCsvBuffer
+from requests import Response, get
 
 from ishareslib.core.proxy_adapter import ProxyAdapter
 from ishareslib.core.user_agent_adapter import UserAgentAdapter
@@ -18,13 +21,39 @@ class Client:
         self._user_agent_adapter = user_agent_adapter
         self._proxy_adapter = proxy_adapter
 
-        # ToDo: Add usage of user agent and proxy factories
+    def _send_get_request(self, path: str) -> Response:
+        headers = {}
+        proxies = {}
+        auth = None
+
+        if self._user_agent_adapter is not None:
+            headers["User-Agent"] = self._user_agent_adapter.new_user_agent()
+
+        if self._proxy_adapter is not None:
+            proxy = self._proxy_adapter.new_proxy()
+            proxies[proxy.protocol] = "%s:%d" % (proxy.address, proxy.port)
+            if proxy.username is not None and proxy.password is not None:
+                auth = (proxy.username, proxy.password)
+
+        return get(
+            "%s%s" % (self._host, path), auth=auth, proxies=proxies, headers=headers
+        )
+
+    @staticmethod
+    def _get_or_none(value, none_value: str = "-") -> Union[str, None]:
+        if not isinstance(value, str) or value == none_value:
+            return None
+        return value
+
+    def clear(self):
+        self._cached_products_df = None
 
     def get_products(self) -> DataFrame:
-        products_df = read_json(
-            "%s/us/product-screener/product-screener-v3.1.jsn?dcrPath=/templatedata/config/product-screener-v3/data"
-            "/en/us-ishares/ishares-product-screener-backend-config&siteEntryPassthrough=true "
-            % self._host
+        products_df = DataFrame(
+            self._send_get_request(
+                "/us/product-screener/product-screener-v3.1.jsn?dcrPath=/templatedata/config/product-screener-v3/data"
+                "/en/us-ishares/ishares-product-screener-backend-config&siteEntryPassthrough=true"
+            ).json()
         ).T
         self._cached_products_df = products_df
         return products_df
@@ -54,22 +83,14 @@ class Client:
         # convert matching product to dict
         return matching_products.to_dict("records")[0]
 
-    def clear(self):
-        self._cached_products_df = None
-
     def get_holdings(self, ticker_symbol: str) -> DataFrame:
         product = self.get_product(ticker_symbol)
-        return read_csv(
-            "%s%s/1467271812596.ajax?fileType=csv"
-            % (self._host, product["productPageUrl"]),
-            skiprows=9,
+        response_content: ReadCsvBuffer[str] = StringIO(
+            self._send_get_request(
+                "%s/1467271812596.ajax?fileType=csv" % product["productPageUrl"]
+            ).content.decode("utf-8")
         )
-
-    @staticmethod
-    def _get_or_none(value, none_value: str = "-") -> Union[str, None]:
-        if not isinstance(value, str) or value == none_value:
-            return None
-        return value
+        return read_csv(response_content, skiprows=9)
 
     def get_aladdin_asset_class(self, ticker_symbol: str) -> Union[str, None]:
         return Client._get_or_none(self.get_product(ticker_symbol)["aladdinAssetClass"])
