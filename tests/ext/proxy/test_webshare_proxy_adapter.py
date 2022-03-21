@@ -76,8 +76,8 @@ def test_new_proxy_with_multiple_responses(requests_mock):
             assert proxy.port == 57336
             assert proxy.username == "jjackson"
         else:
-            assert proxy.address == "101.135.106.135"
-            assert proxy.port == 8144
+            assert proxy.address == "113.221.251.182"
+            assert proxy.port == 36531
             assert proxy.username == "alex38"
 
 
