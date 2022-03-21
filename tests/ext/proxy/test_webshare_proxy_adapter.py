@@ -2,6 +2,7 @@ from typing import Union
 
 from faker import Faker
 from faker.providers import internet
+from pytest import raises
 
 from ishareslib.ext.proxy.webshare_proxy_adapter import WebShareProxyAdapter
 
@@ -74,7 +75,7 @@ def test_new_proxy_with_multiple_responses(requests_mock):
     second_proxy = adapter.new_proxy()
 
     addresses = [first_proxy.address, second_proxy.address]
-    assert addresses == ["38.11.179.14", "113.221.251.182"]
+    assert addresses.sort() == ["38.11.179.14", "113.221.251.182"].sort()
 
 
 def test_new_proxy_with_fixed_target_page_response(requests_mock):
@@ -88,3 +89,17 @@ def test_new_proxy_with_fixed_target_page_response(requests_mock):
     assert proxy.address == "65.198.154.34"
     assert proxy.port == 12881
     assert proxy.username == "jonathanwelch"
+
+
+def test_new_proxy_two_times_with_only_one_in_response(requests_mock):
+    faker: Faker = Faker()
+    faker.add_provider(internet)
+
+    generate_list_mock(requests_mock, faker, pages=1)
+
+    adapter = WebShareProxyAdapter("")
+    adapter.new_proxy()
+    with raises(ValueError) as exc_info:
+        adapter.new_proxy()
+    exception_raised = exc_info.value
+    assert str(exception_raised) == "Could not choose a new proxy"
