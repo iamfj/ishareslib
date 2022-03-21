@@ -1,9 +1,9 @@
 import sys
 
 import pytest
+from faker import Faker
 
 
-# each test runs on cwd to its temp dir
 @pytest.fixture(autouse=True)
 def go_to_tmpdir(request):
     # Get the fixture dynamically by its name.
@@ -13,3 +13,7 @@ def go_to_tmpdir(request):
     # Chdir only for the duration of the test.
     with tmpdir.as_cwd():
         yield
+
+
+def pytest_sessionstart(session):
+    Faker.seed(188273)  # Set faker seed globally
