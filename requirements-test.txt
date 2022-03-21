@@ -1,5 +1,6 @@
 # This requirements are for testing only, not for production.
 
+Faker==13.3.2
 pytest==7.1.0
 pytest-cov==3.0.0
 requests-mock==1.9.3
