@@ -70,15 +70,11 @@ def test_new_proxy_with_multiple_responses(requests_mock):
     generate_list_mock(requests_mock, faker, pages=2)
 
     adapter = WebShareProxyAdapter("")
-    for i in range(1):
-        proxy = adapter.new_proxy()
-        if proxy.address == "38.11.179.14":
-            assert proxy.port == 57336
-            assert proxy.username == "jjackson"
-        else:
-            assert proxy.address == "113.221.251.182"
-            assert proxy.port == 36531
-            assert proxy.username == "alex38"
+    first_proxy = adapter.new_proxy()
+    second_proxy = adapter.new_proxy()
+
+    addresses = [first_proxy.address, second_proxy.address]
+    assert addresses == ["38.11.179.14", "113.221.251.182"]
 
 
 def test_new_proxy_with_fixed_target_page_response(requests_mock):
