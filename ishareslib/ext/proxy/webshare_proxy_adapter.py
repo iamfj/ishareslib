@@ -12,8 +12,9 @@ class WebShareProxyAdapter(ProxyAdapter):
         key: str,
         page: Union[int, None] = None,
         host: str = "proxy.webshare.io/api",
+        regeneration_limit: int = 3,
     ):
-        super().__init__()
+        super().__init__(regeneration_limit=regeneration_limit)
         self._key: str = key
         self._page: Union[int, None] = page
         self._host: str = host
