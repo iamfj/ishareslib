@@ -4,8 +4,8 @@ from typing import Union
 
 class UserAgentAdapter(ABC):
     def __init__(self, regeneration_limit: int = 3):
-        self._user_agent = None
-        self._regeneration_limit = regeneration_limit
+        self._user_agent: Union[str, None] = None
+        self._regeneration_limit: int = regeneration_limit
 
     def get_user_agent(self) -> str:
         if self._user_agent is None:
