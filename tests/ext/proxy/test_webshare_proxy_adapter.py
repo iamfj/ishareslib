@@ -21,7 +21,7 @@ def generate_list_mock(requests_mock, faker: Faker, pages: int = 1):
         if previous_page > 0:
             previous_page_url = list_url % previous_page
 
-        if next_page < pages:
+        if next_page <= pages:
             next_page_url = list_url % next_page
 
         requests_mock.get(
