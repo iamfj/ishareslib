@@ -66,7 +66,7 @@ class Client:
 
         # find matching products by ticker symbol
         matching_products = products_df.loc[
-            products_df["localExchangeTicker"] == ticker_symbol
+            products_df["localExchangeTicker"].str.lower() == ticker_symbol.lower()
         ]
         matching_products_count = matching_products["localExchangeTicker"].count()
         if matching_products_count > 1:
@@ -169,16 +169,18 @@ class Client:
     def get_esg_coverage_formatted(self, ticker_symbol: str) -> str:
         return self.get_product(ticker_symbol)["esgCoverage"]["d"]
 
-    def get_msci_quality_score(self, ticker_symbol: str) -> float:
+    def get_esg_msci_quality_score(self, ticker_symbol: str) -> float:
         return self.get_product(ticker_symbol)["esgMsciQualityScore"]["r"]
 
-    def get_msci_quality_score_formatted(self, ticker_symbol: str) -> str:
+    def get_esg_msci_quality_score_formatted(self, ticker_symbol: str) -> str:
         return self.get_product(ticker_symbol)["esgMsciQualityScore"]["d"]
 
-    def get_msci_quality_score_as_of_date(self, ticker_symbol: str) -> int:
+    def get_esg_msci_quality_score_as_of_date(self, ticker_symbol: str) -> int:
         return self.get_product(ticker_symbol)["esgMsciQualityScoreAsOfDate"]["r"]
 
-    def get_msci_quality_score_as_of_dat_formatted(self, ticker_symbol: str) -> str:
+    def get_esg_msci_quality_score_as_of_date_formatted(
+        self, ticker_symbol: str
+    ) -> str:
         return self.get_product(ticker_symbol)["esgMsciQualityScoreAsOfDate"]["d"]
 
     def get_esg_rating(self, ticker_symbol: str) -> Union[str, None]:
