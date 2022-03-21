@@ -19,7 +19,7 @@ class Proxy:
 
 
 class ProxyAdapter(ABC):
-    def __init__(self, regeneration_limit: int = 3):
+    def __init__(self, regeneration_limit: int):
         self._proxy: Union[Proxy, None] = None
         self._regeneration_limit: int = regeneration_limit
 
