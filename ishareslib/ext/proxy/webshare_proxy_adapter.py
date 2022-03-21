@@ -10,7 +10,7 @@ class WebShareProxyAdapter(ProxyAdapter):
     def __init__(self, key: str, page: Union[int, None] = None):
         super().__init__()
         self._key: str = key
-        self._page: int = page
+        self._page: Union[int, None] = page
         self._host: str = "https://proxy.webshare.io/api"
         self._proxies: list[Proxy] = []
 
