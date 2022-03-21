@@ -2,7 +2,6 @@ from io import StringIO
 from typing import Union
 
 from pandas import DataFrame, read_csv
-from pandas._typing import ReadCsvBuffer
 from requests import Response, get
 
 from ishareslib.core.proxy_adapter import ProxyAdapter
@@ -85,12 +84,14 @@ class Client:
 
     def get_holdings(self, ticker_symbol: str) -> DataFrame:
         product = self.get_product(ticker_symbol)
-        response_content: ReadCsvBuffer[str] = StringIO(
-            self._send_get_request(
-                "%s/1467271812596.ajax?fileType=csv" % product["productPageUrl"]
-            ).content.decode("utf-8")
+        return read_csv(
+            StringIO(
+                self._send_get_request(
+                    "%s/1467271812596.ajax?fileType=csv" % product["productPageUrl"]
+                ).content.decode("utf-8")
+            ),
+            skiprows=9,
         )
-        return read_csv(response_content, skiprows=9)
 
     def get_aladdin_asset_class(self, ticker_symbol: str) -> Union[str, None]:
         return Client._get_or_none(self.get_product(ticker_symbol)["aladdinAssetClass"])
