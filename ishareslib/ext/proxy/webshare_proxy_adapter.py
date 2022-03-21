@@ -31,7 +31,12 @@ class WebShareProxyAdapter(ProxyAdapter):
             )
 
     def _gen_proxy(self) -> Union[Proxy, None]:
-        return choice(self._proxies)
+        proxies: list[Proxy] = self._proxies
+        if self._proxy is not None:
+            proxies.remove(self._proxy)
+        if len(proxies) == 0:
+            return None
+        return choice(proxies)
 
     def _get_proxy_list(self, url: str):
         response = get(url, headers={"Authorization": "Token %s" % self._key}).json()
