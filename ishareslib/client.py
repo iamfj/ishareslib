@@ -186,7 +186,10 @@ class Client:
         )
 
     def get_bid_price(self, ticker_symbol: str) -> Union[float, None]:
-        return Client._get_as_float(self.get_product(ticker_symbol), ["bidPrice"])
+        return Client._get_as_float(self.get_product(ticker_symbol), ["bidPrice", "r"])
+
+    def get_bid_price_formatted(self, ticker_symbol: str) -> Union[str, None]:
+        return Client._get_as_str(self.get_product(ticker_symbol), ["bidPrice", "d"])
 
     def get_clean_duration(self, ticker_symbol: str) -> Union[float, None]:
         return Client._get_as_float(
