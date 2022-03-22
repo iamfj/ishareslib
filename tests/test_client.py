@@ -1,3 +1,5 @@
+from io import StringIO
+
 from pytest import raises
 
 from ishareslib.client import Client
@@ -15,6 +17,35 @@ def mock_products_request(requests_mock, fields: list[dict]):
         fields_json["%d" % (23000 + key)] = field
 
     requests_mock.get(products_url, json=fields_json)
+
+
+def mock_holdings_request(requests_mock, product_page_url: str):
+    holdings_url = (
+        "https://www.ishares.com%s/1467271812596.ajax?fileType=csv" % product_page_url
+    )
+
+    data = StringIO("")
+    data.write("iShares GSCI Commodity Dynamic Roll Strategy ETF\n")
+    data.write('Fund Holdings as of,"Mar 21, 2022"\n')
+    data.write('Inception Date,"Oct 15, 2014"\n')
+    data.write('Shares Outstanding,"94,100,000.00"\n')
+    data.write('Stock,"-"\n')
+    data.write('Bond,"-"\n')
+    data.write('Cash,"-"\n')
+    data.write('Other,"-"\n')
+    data.write(" \n")
+    data.write(
+        "Ticker,Name,Type,Sector,Asset Class,Market Value,Weight (%),Notional Value,Shares,Price,Location,Exchange,"
+        "Currency,Duration,YTM (%),FX Rate,Maturity,Mod. Duration,Yield to Call (%),Yield to Worst (%),Real Duration,"
+        "Real YTM (%),Market Currency,Accrual Date,Effective Date\n "
+    )
+    data.write(
+        '"XTSLA","BLK CSH FND TREASURY SL AGENCY","Money Market","-","Money Market","472,630,094.61","12.14","472,'
+        '630,094.61","472,630,095.00","1.00","United States","-","USD","0.09","0.41","1.00","-","0.11","-","0.41",'
+        '"0.11","0.41","USD","-","Feb 04, 2009"\n '
+    )
+
+    requests_mock.get(holdings_url, text=data.getvalue())
 
 
 def test_get_product_with_different_ticker_names(requests_mock):
@@ -276,3 +307,23 @@ def test_clear():
     assert client._cached_products_df is not None
     client.clear()
     assert client._cached_products_df is None
+
+
+def test_get_holdings(requests_mock):
+    mock_products_request(
+        requests_mock,
+        [
+            {
+                "localExchangeTicker": "MCHI",
+                "productPageUrl": "/us/products/239746/ishares-global-infrastructure-etf",
+            }
+        ],
+    )
+    mock_holdings_request(
+        requests_mock,
+        product_page_url="/us/products/239746/ishares-global-infrastructure-etf",
+    )
+
+    client = Client()
+    holdings = client.get_holdings("MCHI")
+    assert holdings["Name"].count() == 1
