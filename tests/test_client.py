@@ -3,7 +3,7 @@ from pytest import raises
 from ishareslib.client import Client
 
 
-def generate_products_mock(requests_mock, fields: list[dict]):
+def mock_products_request(requests_mock, fields: list[dict]):
     products_url = (
         "https://www.ishares.com/us/product-screener/product-screener-v3.1.jsn?dcrPath=/templatedata"
         "/config/product-screener-v3/data/en/us-ishares/ishares-product-screener-backend-config"
@@ -18,7 +18,7 @@ def generate_products_mock(requests_mock, fields: list[dict]):
 
 
 def test_get_product_with_different_ticker_names(requests_mock):
-    generate_products_mock(requests_mock, [{"localExchangeTicker": "MCHI"}])
+    mock_products_request(requests_mock, [{"localExchangeTicker": "MCHI"}])
 
     client = Client()
     for ticker in ["MCHI", "mchi", "mChI"]:
@@ -26,7 +26,7 @@ def test_get_product_with_different_ticker_names(requests_mock):
 
 
 def test_get_product_with_unknown_ticker_name(requests_mock):
-    generate_products_mock(requests_mock, [{"localExchangeTicker": "MCHI"}])
+    mock_products_request(requests_mock, [{"localExchangeTicker": "MCHI"}])
 
     client = Client()
     with raises(ValueError) as exc_info:
@@ -36,7 +36,7 @@ def test_get_product_with_unknown_ticker_name(requests_mock):
 
 
 def test_get_product_with_duplicate_ticker_name(requests_mock):
-    generate_products_mock(
+    mock_products_request(
         requests_mock,
         [{"localExchangeTicker": "MCHI"}, {"localExchangeTicker": "mChI"}],
     )
@@ -52,7 +52,7 @@ def test_get_product_with_duplicate_ticker_name(requests_mock):
 
 
 def test_get_product_with_str_values(requests_mock):
-    generate_products_mock(
+    mock_products_request(
         requests_mock,
         [
             {
@@ -157,7 +157,7 @@ def test_get_product_with_str_values(requests_mock):
 
 
 def test_get_product_with_int_values(requests_mock):
-    generate_products_mock(
+    mock_products_request(
         requests_mock,
         [
             {
@@ -189,7 +189,7 @@ def test_get_product_with_int_values(requests_mock):
 
 
 def test_get_product_with_float_values(requests_mock):
-    generate_products_mock(
+    mock_products_request(
         requests_mock,
         [
             {
@@ -250,7 +250,7 @@ def test_get_product_with_float_values(requests_mock):
 
 
 def test_get_product_with_list_values(requests_mock):
-    generate_products_mock(
+    mock_products_request(
         requests_mock,
         [
             {
