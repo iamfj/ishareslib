@@ -51,11 +51,9 @@ class Client:
         return field
 
     @staticmethod
-    def _get_as_str(
-        product: dict, fields: list[str], none_value: str = "-"
-    ) -> Union[str, None]:
+    def _get_as_str(product: dict, fields: list[str]) -> Union[str, None]:
         field = Client._get(product, fields)
-        if not isinstance(field, str) or field == none_value:
+        if not isinstance(field, str) or field == "-":
             return None
         return field
 
