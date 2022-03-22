@@ -7,7 +7,7 @@ from pytest import raises
 from ishareslib.ext.proxy.webshare_proxy_adapter import WebShareProxyAdapter
 
 
-def generate_list_mock(requests_mock, faker: Faker, pages: int = 1):
+def mock_list_request(requests_mock, faker: Faker, pages: int = 1):
     list_url = "proxy.webshare.io/api/proxy/list/?page=%d"
 
     for i in range(pages):
@@ -55,7 +55,7 @@ def test_new_proxy_with_single_response(requests_mock):
     faker: Faker = Faker()
     faker.add_provider(internet)
 
-    generate_list_mock(requests_mock, faker, pages=1)
+    mock_list_request(requests_mock, faker, pages=1)
 
     adapter = WebShareProxyAdapter("")
     proxy = adapter.get_proxy()
@@ -68,7 +68,7 @@ def test_new_proxy_with_multiple_responses(requests_mock):
     faker: Faker = Faker()
     faker.add_provider(internet)
 
-    generate_list_mock(requests_mock, faker, pages=2)
+    mock_list_request(requests_mock, faker, pages=2)
 
     adapter = WebShareProxyAdapter("")
     first_proxy = adapter.new_proxy()
@@ -82,7 +82,7 @@ def test_new_proxy_with_fixed_target_page_response(requests_mock):
     faker: Faker = Faker()
     faker.add_provider(internet)
 
-    generate_list_mock(requests_mock, faker, pages=2)
+    mock_list_request(requests_mock, faker, pages=2)
 
     adapter = WebShareProxyAdapter("", page=2)
     proxy = adapter.new_proxy()
@@ -95,7 +95,7 @@ def test_new_proxy_two_times_with_only_one_in_response(requests_mock):
     faker: Faker = Faker()
     faker.add_provider(internet)
 
-    generate_list_mock(requests_mock, faker, pages=1)
+    mock_list_request(requests_mock, faker, pages=1)
 
     adapter = WebShareProxyAdapter("")
     adapter.new_proxy()
