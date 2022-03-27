@@ -19,6 +19,7 @@ def mock_products_request(requests_mock, fields: list[dict]):
     requests_mock.get(products_url, json=fields_json)
 
 
+# ToDo: Optimize this mock function
 def mock_holdings_request(requests_mock, product_page_url: str):
     holdings_url = (
         "https://www.ishares.com%s/1467271812596.ajax?fileType=csv" % product_page_url
@@ -309,6 +310,7 @@ def test_clear():
     assert client._cached_products_df is None
 
 
+# ToDo: Please cover also the edge cases
 def test_get_holdings(requests_mock):
     mock_products_request(
         requests_mock,
