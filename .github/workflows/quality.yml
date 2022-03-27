@@ -43,7 +43,7 @@ jobs:
         run: mypy ${{ github.event.repository.name }}
 
   tests:
-    name: Run Tests
+    name: Run Unit Tests
     needs: linter
     strategy:
       fail-fast: false
@@ -67,7 +67,7 @@ jobs:
         run: pip install --user --upgrade pip
       - name: Install Dependencies
         run: pip install -e .[test]
-      - name: Run tests
+      - name: Run unit tests
         run: pytest -v --cov-config .coveragerc --cov=${{ github.event.repository.name }} -l --tb=long tests/  -m "not integration"
       - name: Validate Coverage over 90%
         run: coverage report --fail-under=90
