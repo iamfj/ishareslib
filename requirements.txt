@@ -1,2 +1,4 @@
 requests==2.27.1
+types-requests==2.27.14
 pandas==1.4.1
+pandas-stubs==1.2.0.53
