@@ -68,7 +68,7 @@ jobs:
       - name: Install Dependencies
         run: pip install -e .[test]
       - name: Run tests
-        run: pytest -v --cov-config .coveragerc --cov=${{ github.event.repository.name }} -l --tb=long tests/
+        run: pytest -v --cov-config .coveragerc --cov=${{ github.event.repository.name }} -l --tb=long tests/  -m "not integration"
       - name: Validate Coverage over 90%
         run: coverage report --fail-under=90
       - name: Generate Coverage Report
